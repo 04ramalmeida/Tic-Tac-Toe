@@ -88,9 +88,9 @@ let game = (function () {
         if (gameboard.Get(0,0) == gameboard.Get(1,1) && gameboard.Get(1,1) === gameboard.Get(2,2)) return true;
 
         // Backwards diagonal
-        if (gameboard.Get(0,2) === gameboard.Get(1,1) && gameboard.Get(1,1) === gameboard.Get(2,0)) return true;
+        return gameboard.Get(0, 2) === gameboard.Get(1, 1) && gameboard.Get(1, 1) === gameboard.Get(2, 0);
 
-        return false;
+
     }
 
 
