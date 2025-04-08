@@ -1,0 +1,50 @@
+root {
+    height: 100%;
+}
+
+body {
+    background-color: #3a3a3a;
+    display: grid;
+    height: 100%;
+    color: white;
+    font-family: sans-serif;
+    grid-row-gap: 16px;
+}
+
+h1 {
+    justify-self: center;
+    margin: 16px 0 0;
+}
+
+footer {
+    font-weight: normal;
+    justify-self: center;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color:gainsboro;
+}
+
+#box {
+    background-color: white;
+    border: 3px solid grey;
+    height: 600px;
+    width: 600px;
+    justify-self: center;
+    display: grid;
+    grid-auto-rows: 1fr;
+}
+
+.row {
+    display: grid;
+    grid-template-columns:1fr 1fr 1fr;
+}
+
+.square {
+    border: 1px solid grey;
+}
