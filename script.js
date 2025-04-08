@@ -10,6 +10,12 @@ let gameboard = (function() {
         return gameBoardArr[x][y];
     }
 
+    function PrintGameBoard() {
+        for (let row = 0; row < gameBoardArr.length; row++) {
+            console.log(`[${gameBoardArr[row][0]}][${gameBoardArr[row][1]}][${gameBoardArr[row][2]}]\n`);
+        }
+    }
+
     function CheckIfNull() {
         for (let rowNum = 0; rowNum < gameBoardArr.length; rowNum++) {
             for (let colNum = 0; colNum < gameBoardArr[rowNum].length; colNum++) {
@@ -19,7 +25,7 @@ let gameboard = (function() {
         return false;
     }
 
-    return {Set, Get, CheckIfNull};
+    return {Set, Get, CheckIfNull, PrintGameBoard};
 })()
 
 
@@ -35,11 +41,14 @@ let game = (function () {
     let hasEnded = false;
     // game continues as long as winner is false
     while (!hasEnded) {
+        gameboard.PrintGameBoard()
         round()
+        gameboard.PrintGameBoard()
+        currPlayer = switchPlayer()
     }
    // create a round function
     function round() {
-        let x,y = getPlace(currPlayer.marker)
+        let {x,y} = getPlace(currPlayer.marker)
         gameboard.Set(x,y,currPlayer.marker);
         if (checkPatterns() === true) {
             alert(`Player ${currPlayer.name} won!`)
@@ -47,9 +56,14 @@ let game = (function () {
         }
         if (!gameboard.CheckIfNull()) {
             hasEnded = true
-            alert(`Tie!`)
+            alert(`Tie!`)}
         }
-    }
+
+        function switchPlayer() {
+            return currPlayer === playerX ? playerY : playerX
+        }
+
+    })
 
 
 
@@ -66,35 +80,45 @@ let game = (function () {
             }
         }
 
-        return x,y
+        return {
+            x : x,
+            y : y,
+        }
     }
 
     function checkPatterns() {
         // Check horizontally
-        if ((gameboard.Get(0,0) === gameboard.Get(0,1) && gameboard.Get(0,1) === gameboard.Get(0,2))
-        ||(gameboard.Get(1,0) === gameboard.Get(1,1) && gameboard.Get(1,1) === gameboard.Get(1,2))
-        ||(gameboard.Get(2,0) == gameboard.Get(2,1) && gameboard.Get(2,1) == gameboard.Get(2,2)))
+        if ((isSame(0,0, 0, 1) && isSame(0,1,0,2))
+        ||(isSame(1,0,1,1) && isSame(1,1,1,2))
+        ||(isSame(2,0,2,1) && isSame(2,1,2,2)))
                 return true;
 
         // Check vertically
 
-        if ((gameboard.Get(0,0) === gameboard.Get(1,0) && gameboard.Get(1,0) === gameboard.Get(2,0))
-            ||(gameboard.Get(0,1) === gameboard.Get(1,1) && gameboard.Get(1,1) === gameboard.Get(2,1))
-            ||(gameboard.Get(0,2) == gameboard.Get(1,2) && gameboard.Get(1,2) == gameboard.Get(2,2)))
+        if ((isSame(0,0,1,0) && isSame(1,0,2,0))
+            ||(isSame(0,1,1,1) && isSame(1,1,2,1))
+            ||(isSame(0,2,1,2) && isSame(1,2,2,2)))
             return true;
 
         // Diagonal
 
-        if (gameboard.Get(0,0) == gameboard.Get(1,1) && gameboard.Get(1,1) === gameboard.Get(2,2)) return true;
+        if (isSame(0,0,1,1) && isSame(1,1,2,2)) return true;
 
         // Backwards diagonal
-        return gameboard.Get(0, 2) === gameboard.Get(1, 1) && gameboard.Get(1, 1) === gameboard.Get(2, 0);
+        return isSame(0, 2,1, 1) && isSame(1, 1,2, 0);
 
-
+        function isSame(x1,y1, x2, y2) {
+            let firstItem = gameboard.Get(x1,y1)
+            let secondItem = gameboard.Get(x2,y2)
+            if (firstItem !== null && secondItem !== null)
+            {
+                if (firstItem === secondItem) return true;
+            }
+            return false;
+        }
     }
 
 
-})()
 
 
 
@@ -102,3 +126,5 @@ let game = (function () {
 function createPlayer(name, marker) {
     return {name, marker}
 }
+
+game()
