@@ -34,7 +34,7 @@ let gameboard = (function() {
 let game = (function () {
    // declare players
     let playerX = createPlayer("X", "X");
-    let playerY = createPlayer("Y", "Y");
+    let playerO = createPlayer("O", "O");
     //first player is X
     let currPlayer = playerX;
     // declare hasWinner as false
@@ -60,7 +60,7 @@ let game = (function () {
         }
 
         function switchPlayer() {
-            return currPlayer === playerX ? playerY : playerX
+            return currPlayer === playerX ? playerO : playerX
         }
 
     })
