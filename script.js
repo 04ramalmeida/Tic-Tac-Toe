@@ -1,4 +1,6 @@
 
+
+
 let gameboard = (function() {
     let gameBoardArr = [[null,null,null],[null,null,null],[null,null,null]]
 
@@ -40,15 +42,8 @@ let game = (function () {
     // declare hasWinner as false
     let hasEnded = false;
     // game continues as long as winner is false
-    while (!hasEnded) {
-        gameboard.PrintGameBoard()
-        round()
-        gameboard.PrintGameBoard()
-        currPlayer = switchPlayer()
-    }
    // create a round function
-    function round() {
-        let {x,y} = getPlace(currPlayer.marker)
+    function round(x,y) {
         gameboard.Set(x,y,currPlayer.marker);
         if (checkPatterns() === true) {
             alert(`Player ${currPlayer.name} won!`)
@@ -57,34 +52,49 @@ let game = (function () {
         if (!gameboard.CheckIfNull()) {
             hasEnded = true
             alert(`Tie!`)}
+        currPlayer = switchPlayer()
         }
 
         function switchPlayer() {
             return currPlayer === playerX ? playerO : playerX
         }
 
-    })
+
+    return {round};
+    })()
 
 
-
-    function getPlace(playerMarker) {
-        let x
-        x = prompt(`Player, insert the row you want to put a ${playerMarker} in.`, "");
-        let y
-        y = prompt(`Player, insert the column you want to put a ${playerMarker} in.`, "");
-
-        if (gameboard.Get(x,y) !== null) {
-            while (gameboard.Get(x,y) !== null) {
-                x = prompt(`That place was already marked, please insert the row you want to put a ${playerMarker} in.`, "");
-                y = prompt(`That place was already marked, please insert the column you want to put a ${playerMarker} in.`, "");
-            }
+let domController = (function () {
+    let rows = document.getElementsByClassName("row");
+    let squares = document.getElementsByClassName("square");
+    console.log(squares);
+    for (let i = 0; i < rows.length; i++) {
+        for (let j = 0; j < 3; j++) {
+            let square = squares[i*3+j];
+            square.setAttribute("data-x", i)
+            square.setAttribute("data-y", j);
+            square.addEventListener("click", function () {
+                if (isFree(i,j)) {
+                    game.round(i,j)
+                    square.innerText = gameboard.Get(i,j)
+                } else alert("This square has already been marked.")
+            })
         }
 
-        return {
-            x : x,
-            y : y,
-        }
     }
+
+
+
+
+    function isFree(xInput, yInput) {
+        let x = xInput;
+        let y = yInput;
+
+        return gameboard.Get(x, y) === null;
+
+
+    }
+})()
 
     function checkPatterns() {
         // Check horizontally
@@ -116,6 +126,7 @@ let game = (function () {
             }
             return false;
         }
+
     }
 
 
@@ -127,4 +138,3 @@ function createPlayer(name, marker) {
     return {name, marker}
 }
 
-game()

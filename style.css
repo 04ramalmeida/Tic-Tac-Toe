@@ -47,4 +47,9 @@ footer a:hover {
 
 .square {
     border: 1px solid grey;
+    font-size: 128px;
+    color: black;
+    display: flex;
+    justify-content:  center;
+    align-items:  center;
 }
