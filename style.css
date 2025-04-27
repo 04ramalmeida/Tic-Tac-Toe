@@ -53,3 +53,12 @@ footer a:hover {
     justify-content:  center;
     align-items:  center;
 }
+
+#reset-button {
+    justify-self: center;
+    padding: 8px 16px 8px 16px;
+    font-size: 20px;
+    background-color: darkgrey;
+    border-style:  none;
+    visibility: hidden;
+}

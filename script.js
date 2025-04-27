@@ -8,6 +8,11 @@ let gameboard = (function() {
         gameBoardArr[x][y] = marker;
     }
 
+    function Reset()
+    {
+      gameBoardArr = [[null,null,null],[null,null,null],[null,null,null]]
+    }
+
     function Get(x,y) {
         return gameBoardArr[x][y];
     }
@@ -27,7 +32,7 @@ let gameboard = (function() {
         return false;
     }
 
-    return {Set, Get, CheckIfNull, PrintGameBoard};
+    return {Set, Get, CheckIfNull, PrintGameBoard, Reset};
 })()
 
 
@@ -48,19 +53,28 @@ let game = (function () {
         if (checkPatterns() === true) {
             alert(`Player ${currPlayer.name} won!`)
             hasEnded = true;
+            domController.disableBoard()
         }
-        if (!gameboard.CheckIfNull()) {
+        if (!gameboard.CheckIfNull()) { // turn this into elif
             hasEnded = true
-            alert(`Tie!`)}
-        currPlayer = switchPlayer()
+            alert(`Tie!`)
+            domController.disableBoard()
+        }
+        if (!hasEnded) currPlayer = switchPlayer()
         }
 
         function switchPlayer() {
             return currPlayer === playerX ? playerO : playerX
         }
 
+        function GetStatus() {
+            return hasEnded
+        }
 
-    return {round};
+        function SwitchStatus() {
+            hasEnded = !hasEnded;
+        }
+    return {round, GetStatus, SwitchStatus};
     })()
 
 
@@ -74,10 +88,12 @@ let domController = (function () {
             square.setAttribute("data-x", i)
             square.setAttribute("data-y", j);
             square.addEventListener("click", function () {
-                if (isFree(i,j)) {
-                    game.round(i,j)
-                    square.innerText = gameboard.Get(i,j)
-                } else alert("This square has already been marked.")
+                if (game.GetStatus() === false) {
+                    if (isFree(i,j)) {
+                        game.round(i,j)
+                        square.innerText = gameboard.Get(i,j)
+                    } else alert("This square has already been marked.")
+                }
             })
         }
 
@@ -91,9 +107,33 @@ let domController = (function () {
         let y = yInput;
 
         return gameboard.Get(x, y) === null;
+    }
+    function disableBoard() {
+        let squareArr = Array.from(squares)
+        squareArr.forEach(square => {
+            square.style.backgroundColor = "grey";
+            square.style.color = "white";
+        })
+        let resetBtn = document.getElementById("reset-button")
+        resetBtn.style.visibility = "visible"
+        resetBtn.addEventListener("click", function () {
+            gameboard.Reset()
+            squareArr.forEach(square => {
+                square.textContent = ""
+                square.style.backgroundColor = "white"
+                square.style.color = "black"
+                let x = square.getAttribute("data-x")
+                let y = square.getAttribute("data-y")
 
+            })
+            game.SwitchStatus()
+            resetBtn.style.visibility = "hidden"
+        })
 
     }
+
+    return {disableBoard: disableBoard};
+
 })()
 
     function checkPatterns() {
