@@ -48,7 +48,6 @@ let game = (function () {
     let hasEnded = false;
     // game continues as long as winner is false
    // create a round function
-
     function round(x,y) {
 
         gameboard.Set(x,y,currPlayer.marker);
@@ -83,12 +82,25 @@ let game = (function () {
         function GetCurrentPlayer() {
             return currPlayer.name
         }
-    return {round, GetStatus, SwitchStatus, GetCurrentPlayer};
+        
+        function SetPlayersName() {
+            let xName = prompt("Insert the name for player " + playerX.name + ".", "")
+            while (xName === null || xName === "") {
+                xName = prompt("Invalid input. Insert the name for player " + playerX.name + ".", "")
+            }
+            let oName = prompt("Insert the name for player " + playerO.name + ".", "")
+            while (oName === null || oName === "") {
+                oName = prompt("Invalid input. Insert the name for player " + playerO.name + ".", "")
+            }
+            playerX.name = xName;
+            playerO.name = oName;
+        }
+    return {round, GetStatus, SwitchStatus, GetCurrentPlayer, SetPlayersName};
     })()
 
 
 let domController = (function () {
-    changeStatus(`It's currently Player ${game.GetCurrentPlayer()}'s turn.`)
+
     let rows = document.getElementsByClassName("row");
     let squares = document.getElementsByClassName("square");
     console.log(squares);
@@ -108,6 +120,8 @@ let domController = (function () {
         }
 
     }
+    game.SetPlayersName()
+    changeStatus(`It's currently Player ${game.GetCurrentPlayer()}'s turn.`)
 
 
     function changeStatus(string) {
