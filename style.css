@@ -60,5 +60,5 @@ footer a:hover {
     font-size: 20px;
     background-color: darkgrey;
     border-style:  none;
-    visibility: hidden;
+    display: none;
 }

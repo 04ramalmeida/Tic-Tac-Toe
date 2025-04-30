@@ -115,7 +115,7 @@ let domController = (function () {
             square.style.color = "white";
         })
         let resetBtn = document.getElementById("reset-button")
-        resetBtn.style.visibility = "visible"
+        resetBtn.style.display = "inline"
         resetBtn.addEventListener("click", function () {
             gameboard.Reset()
             squareArr.forEach(square => {
@@ -127,7 +127,7 @@ let domController = (function () {
 
             })
             game.SwitchStatus()
-            resetBtn.style.visibility = "hidden"
+            resetBtn.style.display = "none"
         })
 
     }
