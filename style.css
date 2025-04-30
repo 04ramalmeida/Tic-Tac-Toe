@@ -62,3 +62,9 @@ footer a:hover {
     border-style:  none;
     display: none;
 }
+
+#status {
+    justify-self: center;
+    margin: 8px;
+    font-size: larger;
+}

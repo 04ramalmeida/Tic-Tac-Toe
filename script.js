@@ -48,19 +48,24 @@ let game = (function () {
     let hasEnded = false;
     // game continues as long as winner is false
    // create a round function
+
     function round(x,y) {
+
         gameboard.Set(x,y,currPlayer.marker);
         if (checkPatterns() === true) {
-            alert(`Player ${currPlayer.name} won!`)
+            domController.changeStatus(`Player ${currPlayer.name} won!`)
             hasEnded = true;
             domController.disableBoard()
         }
         if (!gameboard.CheckIfNull()) { // turn this into elif
             hasEnded = true
-            alert(`Tie!`)
+            domController.changeStatus(`Tie!`)
             domController.disableBoard()
         }
-        if (!hasEnded) currPlayer = switchPlayer()
+        if (!hasEnded) {
+            currPlayer = switchPlayer()
+            domController.changeStatus(`It's currently Player ${currPlayer.name}'s turn.`)
+        }
         }
 
         function switchPlayer() {
@@ -74,11 +79,16 @@ let game = (function () {
         function SwitchStatus() {
             hasEnded = !hasEnded;
         }
-    return {round, GetStatus, SwitchStatus};
+
+        function GetCurrentPlayer() {
+            return currPlayer.name
+        }
+    return {round, GetStatus, SwitchStatus, GetCurrentPlayer};
     })()
 
 
 let domController = (function () {
+    changeStatus(`It's currently Player ${game.GetCurrentPlayer()}'s turn.`)
     let rows = document.getElementsByClassName("row");
     let squares = document.getElementsByClassName("square");
     console.log(squares);
@@ -100,7 +110,10 @@ let domController = (function () {
     }
 
 
-
+    function changeStatus(string) {
+        let status = document.getElementById("status");
+        status.innerText = string;
+    }
 
     function isFree(xInput, yInput) {
         let x = xInput;
@@ -109,15 +122,18 @@ let domController = (function () {
         return gameboard.Get(x, y) === null;
     }
     function disableBoard() {
+
         let squareArr = Array.from(squares)
         squareArr.forEach(square => {
             square.style.backgroundColor = "grey";
             square.style.color = "white";
         })
         let resetBtn = document.getElementById("reset-button")
+
         resetBtn.style.display = "inline"
         resetBtn.addEventListener("click", function () {
             gameboard.Reset()
+            changeStatus("")
             squareArr.forEach(square => {
                 square.textContent = ""
                 square.style.backgroundColor = "white"
@@ -127,12 +143,14 @@ let domController = (function () {
 
             })
             game.SwitchStatus()
+            changeStatus(`It's currently Player ${game.GetCurrentPlayer()}'s turn.`)
             resetBtn.style.display = "none"
+
         })
 
     }
 
-    return {disableBoard: disableBoard};
+    return {disableBoard, changeStatus};
 
 })()
 
